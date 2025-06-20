@@ -37,7 +37,7 @@ public class RepertoirePage : IRepertoirePage
     /// <summary>
     /// Extracts the list of supported products listed on the page.
     /// </summary>
-   public List<string> GetSupportedProducts()
+    public List<string> GetSupportedProducts()
     {
         // Wait for the heading to be visible
         var heading = _wait.Until(driver =>
@@ -76,5 +76,4 @@ public class RepertoirePage : IRepertoirePage
 
         return items;
     }
-
 }
