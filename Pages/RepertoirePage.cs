@@ -37,59 +37,44 @@ public class RepertoirePage : IRepertoirePage
     /// <summary>
     /// Extracts the list of supported products listed on the page.
     /// </summary>
-    public List<string> GetSupportedProducts()
+   public List<string> GetSupportedProducts()
     {
-        return _wait.Until(d =>
+        // Wait for the heading to be visible
+        var heading = _wait.Until(driver =>
         {
             try
             {
-                // var heading = d.FindElement(By.XPath(ElementSelectors.ProductSupportHeadingXPath));
-                _wait.Until(d =>
-                {
-                    var heading = d.FindElement(By.XPath(ElementSelectors.ProductSupportHeadingXPath));
-                    return heading.Displayed;
-                });
-
-                var ul = heading.FindElement(By.XPath(ElementSelectors.ProductListXPath));
-
-                var previous = new List<string>();
-                int stableCount = 0;
-
-                for (int i = 0; i < 10; i++) // Try for ~5 seconds (10 x 500ms)
-                {
-                    var items = ul.FindElements(By.TagName("li"))
-                                .Where(li => !string.IsNullOrWhiteSpace(li.Text))
-                                .Select(li => li.Text.Trim())
-                                .ToList();
-
-                    if (items.SequenceEqual(previous))
-                    {
-                        stableCount++;
-                        if (stableCount >= 2) // Same list for 2 iterations (1 second)
-                            return items;
-                    }
-                    else
-                    {
-                        stableCount = 0;
-                        previous = items;
-                    }
-
-                    Thread.Sleep(500);
-                }
-
-                return previous.Count > 0 ? previous : null;
-
-                // var items = ul.FindElements(By.TagName("li"))
-                //               .Where(li => !string.IsNullOrWhiteSpace(li.Text))
-                //               .Select(li => li.Text.Trim())
-                //               .ToList();
-
-                // return items.Count > 0 ? items : null;
+                var h = driver.FindElement(By.XPath(ElementSelectors.ProductSupportHeadingXPath));
+                return h.Displayed ? h : null;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
         });
+
+        // Wait for the list to appear and contain non-empty items
+        var items = _wait.Until(driver =>
+        {
+            try
+            {
+                var refreshedHeading = driver.FindElement(By.XPath(ElementSelectors.ProductSupportHeadingXPath));
+                var ul = refreshedHeading.FindElement(By.XPath(ElementSelectors.ProductListXPath));
+
+                var listItems = ul.FindElements(By.TagName("li"))
+                                .Where(li => !string.IsNullOrWhiteSpace(li.Text))
+                                .Select(li => li.Text.Trim())
+                                .ToList();
+
+                return listItems.Count > 0 ? listItems : null;
+            }
+            catch
+            {
+                return null;
+            }
+        });
+
+        return items;
     }
+
 }
