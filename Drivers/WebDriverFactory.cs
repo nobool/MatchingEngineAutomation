@@ -1,4 +1,3 @@
-// Drivers/WebDriverFactory.cs
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 

@@ -1,4 +1,3 @@
-// Pages/HomePage.cs
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
@@ -16,17 +15,17 @@ public class HomePage
         _actions = new Actions(driver);
     }
 
-    public void Open() => _driver.Navigate().GoToUrl("https://www.matchingengine.com/");
+    public void Open() => _driver.Navigate().GoToUrl(TestConfig.BaseUrl);
 
     public void HoverOverModules()
     {
-        var modules = _wait.Until(d => d.FindElement(By.LinkText("Modules")));
+        var modules = _wait.Until(d => d.FindElement(By.LinkText(ElementSelectors.ModulesLinkText)));
         _actions.MoveToElement(modules).Perform();
     }
 
     public void SelectRepertoireManagementModule()
     {
-        var link = _wait.Until(d => d.FindElement(By.PartialLinkText("Repertoire Management Module")));
+        var link = _wait.Until(d => d.FindElement(By.PartialLinkText(ElementSelectors.RepertoireModulePartialLinkText)));
         link.Click();
     }
 }
