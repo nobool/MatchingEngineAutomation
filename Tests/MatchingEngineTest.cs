@@ -33,8 +33,10 @@ public class MatchingEngineTests
         {
             _homePage.Open();
 
-            try { _homePage.HoverOverModules(); }
-            catch (Exception ex) { Assert.Fail($"Failed while hovering over 'Modules': {ex.Message}"); }
+            try {
+                _homePage.ClickOverModules(); 
+                _homePage.HoverOverModules(); }
+            catch (Exception ex) { Assert.Fail($"Failed while clicking over 'Modules': {ex.Message}"); }
 
             try { _homePage.SelectRepertoireManagementModule(); }
             catch (Exception ex) { Assert.Fail($"Failed while clicking 'Repertoire Management Module': {ex.Message}"); }
