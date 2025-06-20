@@ -22,7 +22,6 @@ jobs:
     - name: Setup Chrome + ChromeDriver
       uses: browser-actions/setup-chrome@v1
       with:
-        chrome-version: "latest"
         install-chromedriver: true
 
     # - name: Setup Google Chrome
