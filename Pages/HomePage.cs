@@ -2,7 +2,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 
-public class HomePage
+public class HomePage : IHomePage
 {
     private readonly IWebDriver _driver;
     private readonly WebDriverWait _wait;

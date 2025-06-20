@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class RepertoirePage
+public class RepertoirePage : IRepertoirePage
 {
     private readonly IWebDriver _driver;
     private readonly WebDriverWait _wait;

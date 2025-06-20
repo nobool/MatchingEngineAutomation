@@ -1,4 +1,3 @@
-// Utilities/ElementSelectors.cs
 public static class ElementSelectors
 {
     public const string ModulesLinkText = "Modules";

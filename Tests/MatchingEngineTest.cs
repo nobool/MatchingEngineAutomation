@@ -1,17 +1,25 @@
 using NUnit.Framework;
 using OpenQA.Selenium;
+using System;
+using System.Collections.Generic;
 
 [TestFixture]
 public class MatchingEngineTests
 {
     private IWebDriver _driver;
-    private HomePage _homePage;
-    private RepertoirePage _repertoirePage;
+    private IHomePage _homePage;
+    private IRepertoirePage _repertoirePage;
+    private IWebDriverFactory _webDriverFactory;
+
+    public MatchingEngineTests()
+    {
+        _webDriverFactory = new WebDriverFactory();
+    }
 
     [SetUp]
     public void Setup()
     {
-        _driver = WebDriverFactory.CreateChromeDriver();
+        _driver = _webDriverFactory.Create();
         _driver.Manage().Window.Maximize();
 
         _homePage = new HomePage(_driver);
@@ -19,39 +27,34 @@ public class MatchingEngineTests
     }
 
     [Test]
-    public void Should_Display_Correct_Supported_Products()
+    public void Verify_Supported_Product_List()
     {
-        _homePage.Open();
-
-        _homePage.HoverOverModules();
-
-        _homePage.SelectRepertoireManagementModule();
-
-        _repertoirePage.ScrollToAdditionalFeatures();
-
-        _repertoirePage.OpenProductsSupported();
-
-        List<string> actual = _repertoirePage.GetSupportedProducts();
-
-        if (actual == null)
+        try
         {
-            Console.WriteLine("DEBUG: Returned product list is NULL.");
-        }
-        else if (actual.Count == 0)
-        {
-            Console.WriteLine("DEBUG: Returned product list is EMPTY.");
-        }
-        else
-        {
-            Console.WriteLine("DEBUG: Product list items retrieved:");
-            foreach (var item in actual)
-            {
-                Console.WriteLine($" - {item}");
-            }
-        }
+            _homePage.Open();
 
-        Console.WriteLine("Running assertion against expected values...");
-        Assert.That(actual, Is.EquivalentTo(ProductList.Expected));
+            try { _homePage.HoverOverModules(); }
+            catch (Exception ex) { Assert.Fail($"Failed while hovering over 'Modules': {ex.Message}"); }
+
+            try { _homePage.SelectRepertoireManagementModule(); }
+            catch (Exception ex) { Assert.Fail($"Failed while clicking 'Repertoire Management Module': {ex.Message}"); }
+
+            try { _repertoirePage.ScrollToAdditionalFeatures(); }
+            catch (Exception ex) { Assert.Fail($"Failed while scrolling to 'Additional Features': {ex.Message}"); }
+
+            try { _repertoirePage.OpenProductsSupported(); }
+            catch (Exception ex) { Assert.Fail($"Failed while clicking 'Products Supported': {ex.Message}"); }
+
+            List<string> actual;
+            try { actual = _repertoirePage.GetSupportedProducts(); }
+            catch (Exception ex) { throw new Exception($"Failed while retrieving supported products: {ex.Message}", ex); }
+
+            Assert.That(actual, Is.EquivalentTo(ProductList.Expected));
+        }
+        catch (Exception ex)
+        {
+            Assert.Fail($"Unhandled test failure: {ex.Message}");
+        }
     }
 
     [TearDown]
