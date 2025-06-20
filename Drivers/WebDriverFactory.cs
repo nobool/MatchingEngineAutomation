@@ -10,8 +10,8 @@ public class WebDriverFactory : IWebDriverFactory
         // Check if running in headless mode (default to false if not set)
         var headless = Environment.GetEnvironmentVariable("HEADLESS")?.ToLower() == "true";
 
-        // if (headless)
-        // {
+        if (headless)
+        {
             options.AddArguments(
                 "--headless=new", 
                 "--disable-gpu",
@@ -19,12 +19,12 @@ public class WebDriverFactory : IWebDriverFactory
                 "--no-sandbox", 
                 "--disable-dev-shm-usage"
             );
-        // }
-        // else
-        // {
-        //     // Optional: run maximized in GUI mode
-        //     options.AddArgument("--start-maximized");
-        // }
+        }
+        else
+        {
+            // Optional: run maximized in GUI mode
+            options.AddArgument("--start-maximized");
+        }
 
         return new ChromeDriver(options);
     }
