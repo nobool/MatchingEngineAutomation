@@ -43,7 +43,12 @@ public class RepertoirePage : IRepertoirePage
         {
             try
             {
-                var heading = d.FindElement(By.XPath(ElementSelectors.ProductSupportHeadingXPath));
+                // var heading = d.FindElement(By.XPath(ElementSelectors.ProductSupportHeadingXPath));
+                _wait.Until(d =>
+                {
+                    var heading = d.FindElement(By.XPath(ElementSelectors.ProductSupportHeadingXPath));
+                    return heading.Displayed;
+                });
 
                 var ul = heading.FindElement(By.XPath(ElementSelectors.ProductListXPath));
 
