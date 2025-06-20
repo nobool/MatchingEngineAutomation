@@ -47,12 +47,39 @@ public class RepertoirePage : IRepertoirePage
 
                 var ul = heading.FindElement(By.XPath(ElementSelectors.ProductListXPath));
 
-                var items = ul.FindElements(By.TagName("li"))
-                              .Where(li => !string.IsNullOrWhiteSpace(li.Text))
-                              .Select(li => li.Text.Trim())
-                              .ToList();
+                var previous = new List<string>();
+                int stableCount = 0;
 
-                return items.Count > 0 ? items : null;
+                for (int i = 0; i < 10; i++) // Try for ~5 seconds (10 x 500ms)
+                {
+                    var items = ul.FindElements(By.TagName("li"))
+                                .Where(li => !string.IsNullOrWhiteSpace(li.Text))
+                                .Select(li => li.Text.Trim())
+                                .ToList();
+
+                    if (items.SequenceEqual(previous))
+                    {
+                        stableCount++;
+                        if (stableCount >= 2) // Same list for 2 iterations (1 second)
+                            return items;
+                    }
+                    else
+                    {
+                        stableCount = 0;
+                        previous = items;
+                    }
+
+                    Thread.Sleep(500);
+                }
+
+                return previous.Count > 0 ? previous : null;
+
+                // var items = ul.FindElements(By.TagName("li"))
+                //               .Where(li => !string.IsNullOrWhiteSpace(li.Text))
+                //               .Select(li => li.Text.Trim())
+                //               .ToList();
+
+                // return items.Count > 0 ? items : null;
             }
             catch (Exception ex)
             {
