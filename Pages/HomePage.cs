@@ -28,11 +28,6 @@ public class HomePage : IHomePage
     /// Hovers over the 'Modules' menu in the header.
     /// </summary>
 
-    public void ClickOverModules()
-    {
-        var modules = _wait.Until(driver => driver.FindElement(By.LinkText(ElementSelectors.ModulesLinkText)));
-        modules.Click();
-    }
 
     public void HoverOverModules()
     {

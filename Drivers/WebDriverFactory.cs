@@ -14,10 +14,16 @@ public class WebDriverFactory : IWebDriverFactory
         {
             options.AddArguments(
                 "--headless=new", 
-                "--disable-gpu", 
+                "--disable-gpu",
+                "--window-size=1920,1080",
                 "--no-sandbox", 
                 "--disable-dev-shm-usage"
             );
+        }
+        else
+        {
+            // Optional: run maximized in GUI mode
+            options.AddArgument("--start-maximized");
         }
 
         return new ChromeDriver(options);
