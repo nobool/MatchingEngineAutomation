@@ -22,7 +22,11 @@ public class HomePage : IHomePage
     /// <summary>
     /// Navigates to the Matching Engine homepage.
     /// </summary>
-    public void Open() => _driver.Navigate().GoToUrl(TestConfig.BaseUrl);
+    public void Open()
+    { 
+        _driver.Navigate().GoToUrl(TestConfig.BaseUrl);
+        _wait.Until(d =>((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
+    }
 
     /// <summary>
     /// Hovers over the 'Modules' menu in the header.

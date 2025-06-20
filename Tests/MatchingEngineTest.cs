@@ -40,6 +40,9 @@ public class MatchingEngineTests
             try { _homePage.SelectRepertoireManagementModule(); }
             catch (Exception ex) { Assert.Fail($"Failed while clicking 'Repertoire Management Module': {ex.Message}"); }
 
+            try { _repertoirePage.WaitUntilLoaded();}
+            catch (Exception ex) { Assert.Fail($"Failed while loading 'Repertoire Page': {ex.Message}"); }
+            
             try { _repertoirePage.ScrollToAdditionalFeatures(); }
             catch (Exception ex) { Assert.Fail($"Failed while scrolling to 'Additional Features': {ex.Message}"); }
 

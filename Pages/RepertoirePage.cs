@@ -17,6 +17,16 @@ public class RepertoirePage : IRepertoirePage
         _driver = driver;
         _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
     }
+
+    /// <summary>
+    /// Waits until Repertoire Page Loads
+    /// </summary>
+    public void WaitUntilLoaded()
+    {
+        _wait.Until(d =>
+            ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
+    }
+    
     /// <summary>
     /// Scrolls the page to the 'Additional Features' section.
     /// </summary>
@@ -25,6 +35,7 @@ public class RepertoirePage : IRepertoirePage
         var section = _wait.Until(d => d.FindElement(By.XPath(ElementSelectors.AdditionalFeaturesXPath)));
         ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", section);
     }
+    
     /// <summary>
     /// Clicks on the 'Products Supported' expandable section.
     /// </summary>
