@@ -2,6 +2,10 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 
+
+/// <summary>
+/// Represents actions on the home page of the Matching Engine website.
+/// </summary>
 public class HomePage : IHomePage
 {
     private readonly IWebDriver _driver;
@@ -15,17 +19,26 @@ public class HomePage : IHomePage
         _actions = new Actions(driver);
     }
 
+    /// <summary>
+    /// Navigates to the Matching Engine homepage.
+    /// </summary>
     public void Open() => _driver.Navigate().GoToUrl(TestConfig.BaseUrl);
 
+    /// <summary>
+    /// Hovers over the 'Modules' menu in the header.
+    /// </summary>
     public void HoverOverModules()
     {
-        var modules = _wait.Until(d => d.FindElement(By.LinkText(ElementSelectors.ModulesLinkText)));
+        var modules = _wait.Until(driver => driver.FindElement(By.LinkText(ElementSelectors.ModulesLinkText)));
         _actions.MoveToElement(modules).Perform();
     }
 
+    /// <summary>
+    /// Clicks on the 'Repertoire Management Module' item.
+    /// </summary>
     public void SelectRepertoireManagementModule()
     {
-        var link = _wait.Until(d => d.FindElement(By.PartialLinkText(ElementSelectors.RepertoireModulePartialLinkText)));
+        var link = _wait.Until(driver => driver.FindElement(By.PartialLinkText(ElementSelectors.RepertoireModulePartialLinkText)));
         link.Click();
     }
 }

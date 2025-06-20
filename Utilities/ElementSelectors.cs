@@ -1,3 +1,6 @@
+/// <summary>
+/// Centralized XPath and selector constants used across page objects.
+/// </summary>
 public static class ElementSelectors
 {
     public const string ModulesLinkText = "Modules";
