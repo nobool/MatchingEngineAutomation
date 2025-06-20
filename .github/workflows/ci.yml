@@ -2,7 +2,7 @@ name: .NET 8 Selenium CI
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", "ci-test" ]
   pull_request:
     branches: [ "main", "develop" ]
 
@@ -19,14 +19,19 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-
-    - name: Setup Google Chrome
+    - name: Setup Chrome + ChromeDriver
       uses: browser-actions/setup-chrome@v1
-
-    - name: Setup ChromeDriver
-      uses: nanasess/setup-chromedriver@v2
       with:
-        chromedriver-version: 'latest'
+        chrome-version: "latest"
+        install-chromedriver: true
+
+    # - name: Setup Google Chrome
+    #   uses: browser-actions/setup-chrome@v1
+
+    # - name: Setup ChromeDriver
+    #   uses: nanasess/setup-chromedriver@v2
+    #   with:
+    #     chromedriver-version: 'latest'
 
     - name: Restore NuGet packages
       run: dotnet restore
