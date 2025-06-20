@@ -20,7 +20,7 @@ public class MatchingEngineTests
     public void Setup()
     {
         _driver = _webDriverFactory.Create();
-        _driver.Manage().Window.Maximize();
+        // _driver.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
 
         _homePage = new HomePage(_driver);
         _repertoirePage = new RepertoirePage(_driver);
@@ -33,12 +33,16 @@ public class MatchingEngineTests
         {
             _homePage.Open();
 
-            try { _homePage.HoverOverModules(); }
-            catch (Exception ex) { Assert.Fail($"Failed while hovering over 'Modules': {ex.Message}"); }
+            try {
+                _homePage.HoverOverModules(); }
+            catch (Exception ex) { Assert.Fail($"Failed while clicking over 'Modules': {ex.Message}"); }
 
             try { _homePage.SelectRepertoireManagementModule(); }
             catch (Exception ex) { Assert.Fail($"Failed while clicking 'Repertoire Management Module': {ex.Message}"); }
 
+            try { _repertoirePage.WaitUntilLoaded();}
+            catch (Exception ex) { Assert.Fail($"Failed while loading 'Repertoire Page': {ex.Message}"); }
+            
             try { _repertoirePage.ScrollToAdditionalFeatures(); }
             catch (Exception ex) { Assert.Fail($"Failed while scrolling to 'Additional Features': {ex.Message}"); }
 

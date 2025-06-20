@@ -79,6 +79,26 @@ dotnet add package Microsoft.NET.Test.Sdk
    dotnet test
    ```
 
+3. To run in Headless mode
+
+   On Windows based devices - CMD
+   ```cmd
+   set HEADLESS=true
+   dotnet test
+   ```
+
+   On Windows based devices - Powershell
+   ```powershell
+   $env:HEADLESS = "true"
+   dotnet test
+   ```
+
+   On Linux based devices
+   ```bash
+   export HEADLESS=true
+   dotnet test
+   ```
+
 ---
 
 ## ⚙️ Configuration

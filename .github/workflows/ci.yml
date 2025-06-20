@@ -1,0 +1,44 @@
+name: .NET 8 Selenium CI
+
+on:
+  push:
+    branches: [ "main", "develop", "ci-test" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  test:
+    name: Run Selenium Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 8 SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    - name: Setup Chrome + ChromeDriver
+      uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: "137.0.7151.55"
+        chromedriver-version: "137.0.7151.55"
+        install-chromedriver: true
+
+    - name: Restore NuGet packages
+      run: dotnet restore
+
+    - name: Build solution
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Run Selenium tests
+      env:
+        HEADLESS: true
+      run: dotnet test --no-build --configuration Release --logger trx
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: '**/TestResults/*.trx'
