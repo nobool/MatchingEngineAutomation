@@ -17,6 +17,16 @@ public class RepertoirePage : IRepertoirePage
         _driver = driver;
         _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
     }
+
+    /// <summary>
+    /// Waits until Repertoire Page Loads
+    /// </summary>
+    public void WaitUntilLoaded()
+    {
+        _wait.Until(d =>
+            ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
+    }
+    
     /// <summary>
     /// Scrolls the page to the 'Additional Features' section.
     /// </summary>
@@ -25,6 +35,7 @@ public class RepertoirePage : IRepertoirePage
         var section = _wait.Until(d => d.FindElement(By.XPath(ElementSelectors.AdditionalFeaturesXPath)));
         ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", section);
     }
+    
     /// <summary>
     /// Clicks on the 'Products Supported' expandable section.
     /// </summary>
@@ -39,25 +50,41 @@ public class RepertoirePage : IRepertoirePage
     /// </summary>
     public List<string> GetSupportedProducts()
     {
-        return _wait.Until(d =>
+        // Wait for the heading to be visible
+        var heading = _wait.Until(driver =>
         {
             try
             {
-                var heading = d.FindElement(By.XPath(ElementSelectors.ProductSupportHeadingXPath));
-
-                var ul = heading.FindElement(By.XPath(ElementSelectors.ProductListXPath));
-
-                var items = ul.FindElements(By.TagName("li"))
-                              .Where(li => !string.IsNullOrWhiteSpace(li.Text))
-                              .Select(li => li.Text.Trim())
-                              .ToList();
-
-                return items.Count > 0 ? items : null;
+                var h = driver.FindElement(By.XPath(ElementSelectors.ProductSupportHeadingXPath));
+                return h.Displayed ? h : null;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
         });
+
+        // Wait for the list to appear and contain non-empty items
+        var items = _wait.Until(driver =>
+        {
+            try
+            {
+                var refreshedHeading = driver.FindElement(By.XPath(ElementSelectors.ProductSupportHeadingXPath));
+                var ul = refreshedHeading.FindElement(By.XPath(ElementSelectors.ProductListXPath));
+
+                var listItems = ul.FindElements(By.TagName("li"))
+                                .Where(li => !string.IsNullOrWhiteSpace(li.Text))
+                                .Select(li => li.Text.Trim())
+                                .ToList();
+
+                return listItems.Count > 0 ? listItems : null;
+            }
+            catch
+            {
+                return null;
+            }
+        });
+
+        return items;
     }
 }
